@@ -1,0 +1,17 @@
+.loginBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.errorText {
+    color: red;
+    font-weight: bold;
+}
+
+.successText {
+    color: green;
+    font-weight: bold;
+}
