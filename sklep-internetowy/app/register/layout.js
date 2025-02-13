@@ -1,7 +1,7 @@
 export default function RegisterLayout({ children }) {
   return (
-    <div>
-      Rejestracja
+    <div className="container mx-auto p-4">
+      <span className="sr-only">Rejestracja</span>
       {children}
     </div>
   );

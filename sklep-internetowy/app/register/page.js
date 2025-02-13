@@ -94,11 +94,17 @@ export default function RegisterPage() {
         </p>
       )}
 
-
-      
-      <button onClick={handleRegister} disabled={isRegistering}>
-        {isRegistering ? "Rejestrowanie..." : "Zarejestruj się"}
+      <button
+        onClick={handleRegister}
+        disabled={isRegistering}
+        className="p-[3px] relative"
+      >
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+        <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+          {isRegistering ? "Rejestrowanie..." : "Zarejestruj się"}
+        </div>
       </button>
+
       <p>
         Masz już konto? <Link href="/login">Zaloguj się</Link>.
       </p>
