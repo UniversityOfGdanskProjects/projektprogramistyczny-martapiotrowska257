@@ -43,7 +43,14 @@ export default function LoginPage() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>Zaloguj się</button>
+
+      <button onClick={handleLogin} className="p-[3px] relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+        <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+          Zaloguj się
+        </div>
+      </button>
+
       <p>
         Nie masz konta? <Link href="/register">Zarejestruj się</Link>.
       </p>

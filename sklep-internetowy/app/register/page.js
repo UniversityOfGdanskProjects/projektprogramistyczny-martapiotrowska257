@@ -93,6 +93,9 @@ export default function RegisterPage() {
           Rejestracja pomyślna! Możesz się teraz zalogować.
         </p>
       )}
+
+
+      
       <button onClick={handleRegister} disabled={isRegistering}>
         {isRegistering ? "Rejestrowanie..." : "Zarejestruj się"}
       </button>
