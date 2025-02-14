@@ -4,11 +4,13 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import styles from "./login.module.css";
 import headers from "@/app/headers";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const router = useRouter();
 
   function handleLogin() {
     setIsLoggingIn(true);
@@ -22,8 +24,18 @@ export default function LoginPage() {
     })
       .then((res) => res.json())
       .then((tokens) => {
-        const { access_token } = tokens;
-        console.log(access_token);
+        if (tokens.access_token) {
+          localStorage.setItem("token", tokens.access_token);
+          window.dispatchEvent(new Event("storage"));
+          router.push("/");
+        } else {
+          alert("Błąd logowania. Sprawdź dane i spróbuj ponownie.");
+        }
+      })
+      .catch((error) => {
+        console.error("Login error:", error);
+      })
+      .finally(() => {
         setIsLoggingIn(false);
       });
   }

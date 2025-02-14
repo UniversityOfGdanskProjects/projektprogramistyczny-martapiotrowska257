@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-// import "@/app/globals.css";
 import styles from "@/app/home.module.css";
 import Filter from "./components/Filter";
 import KoszykPage from "./koszyk/page";
@@ -12,11 +11,40 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      setIsAuthenticated(true);
+      if (window.location.pathname === "/login") {
+        router.push("/"); // Redirect after login
+      }
+    };
+
+    checkAuth();
+
+    // Listen for custom auth event
+    const handleAuthChange = () => checkAuth();
+    window.addEventListener("authChange", handleAuthChange);
+
+    return () => {
+      window.removeEventListener("authChange", handleAuthChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     async function fetchList() {
       try {
         const limit = searchParams.get("limit") || "150";
@@ -55,7 +83,7 @@ export default function Home() {
     }
 
     fetchList();
-  }, [searchParams]);
+  }, [searchParams, isAuthenticated]);
 
   const updateFilters = (filters) => {
     const params = new URLSearchParams();
