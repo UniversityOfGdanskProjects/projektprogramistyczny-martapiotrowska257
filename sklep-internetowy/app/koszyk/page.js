@@ -18,6 +18,8 @@ export default function KoszykPage() {
     expiryDate: "",
     cvv: "",
   });
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     const savedCart = sessionStorage.getItem("cart");
@@ -43,7 +45,22 @@ export default function KoszykPage() {
     sessionStorage.setItem("cart", JSON.stringify(newCart));
   };
 
+  const validCoupons = {
+    PROMO10: 0.1,
+    PROMO20: 0.2,
+  };
+
+  const applyCoupon = () => {
+    if (validCoupons[coupon]) {
+      setDiscount(validCoupons[coupon]);
+    } else {
+      setDiscount(0);
+      alert("Nieprawidłowy kod kuponu!");
+    }
+  };
+
   const totalPrice = cart.reduce((sum, item) => sum + item.price, 0);
+  const discountedPrice = (totalPrice * (1 - discount)).toFixed(2);
 
   const placeOrder = async () => {
     if (cart.length === 0) {
@@ -202,8 +219,31 @@ export default function KoszykPage() {
         </div>
       </div>
 
+      {/* Coupon Section */}
+      <div className="mt-4 p-4 bg-white rounded-lg">
+        <h3 className="text-lg font-bold text-pink-800">Kod rabatowy</h3>
+        <input
+          type="text"
+          placeholder="Wpisz kod kuponu"
+          value={coupon}
+          onChange={(e) => setCoupon(e.target.value)}
+          className="border p-2 rounded w-full mt-2"
+        />
+        <button
+          onClick={applyCoupon}
+          className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Zastosuj kupon
+        </button>
+      </div>
+
+      {/* Total Price Section */}
       <div className="mt-6 pt-4 border-t border-pink-200">
-        <h3 className="text-xl font-bold text-pink-800">Suma: ${totalPrice}</h3>
+        <h3 className="text-xl font-bold text-pink-800">
+          Suma:{" "}
+          <span className="line-through text-gray-500">${totalPrice}</span> $
+          {discountedPrice}
+        </h3>
       </div>
 
       <button
