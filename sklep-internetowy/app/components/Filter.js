@@ -7,6 +7,7 @@ export default function Filter({ updateFilters }) {
   const [category, setCategory] = useState("");
   const [limit, setLimit] = useState("20");
   const [productCategories, setProductCategories] = useState([]);
+  const [priceSort, setPriceSort] = useState("");
 
   useEffect(() => {
     fetch(`https://api.escuelajs.co/api/v1/categories`, {
@@ -29,7 +30,7 @@ export default function Filter({ updateFilters }) {
   }, []);
 
   const applyFilters = () => {
-    updateFilters({ search, category, limit });
+    updateFilters({ search, category, limit, priceSort });
   };
 
   return (
@@ -75,6 +76,20 @@ export default function Filter({ updateFilters }) {
           min="1"
           max="100"
         />
+      </div>
+      <div className="mb-4">
+        <label className="block text-pink-700 text-sm font-bold mb-2">
+          Sortowanie po cenie:{" "}
+        </label>
+        <select
+          className="shadow appearance-none border border-pink-200 rounded w-full py-2 px-3 text-pink-700 leading-tight focus:outline-none focus:shadow-outline focus:border-pink-400"
+          value={priceSort}
+          onChange={(e) => setPriceSort(e.target.value)}
+        >
+          <option value="">Brak</option>
+          <option value="asc">Rosnąco</option>
+          <option value="desc">Malejąco</option>
+        </select>
       </div>
       <button
         className="bg-pink-400 hover:bg-pink-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"

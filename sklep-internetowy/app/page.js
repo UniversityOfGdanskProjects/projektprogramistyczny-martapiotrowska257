@@ -58,6 +58,7 @@ export default function Home() {
         const limit = searchParams.get("limit") || "150";
         const search = searchParams.get("search") || "";
         const category = searchParams.get("category") || "";
+        const priceSort = searchParams.get("priceSort") || "";
 
         const response = await fetch(
           "https://api.escuelajs.co/api/v1/products"
@@ -81,6 +82,12 @@ export default function Home() {
           );
         }
 
+        if (priceSort === "asc") {
+          detailedData = detailedData.sort((a, b) => a.price - b.price);
+        } else if (priceSort === "desc") {
+          detailedData = detailedData.sort((a, b) => b.price - a.price);
+        }
+
         detailedData = detailedData.slice(0, limit);
         setProducts(detailedData);
       } catch (error) {
@@ -99,6 +106,7 @@ export default function Home() {
     if (filters.search) params.set("search", filters.search);
     if (filters.category) params.set("category", filters.category);
     if (filters.limit) params.set("limit", filters.limit);
+    if (filters.priceSort) params.set("priceSort", filters.priceSort);
 
     router.push(`/?${params.toString()}`);
   };
