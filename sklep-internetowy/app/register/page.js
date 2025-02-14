@@ -59,55 +59,65 @@ export default function RegisterPage() {
   }, [name, email, password]);
 
   return (
-    <div className={styles.loginBox}>
-      <h1>Zarejestruj się</h1>
-      <input
-        type="text"
-        placeholder="Imię"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Adres e-mail"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Hasło"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      {nameError && <p className={styles.errorText}>Imię jest niepoprawne!</p>}
-      {emailError && (
-        <p className={styles.errorText}>Adres e-mail jest niepoprawny!</p>
-      )}
-      {passwordError && (
-        <p className={styles.errorText}>
-          Hasło musi mieć co najmniej 6 znaków!
-        </p>
-      )}
-      {registerSuccess && (
-        <p className={styles.successText}>
-          Rejestracja pomyślna! Możesz się teraz zalogować.
-        </p>
-      )}
+    <div className="p-6 bg-pink-50 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-pink-800">Zarejestruj się</h2>
+      <div className="space-y-4">
+        <input
+          type="text"
+          placeholder="Imię"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full p-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+        <input
+          type="email"
+          placeholder="Adres e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+        <input
+          type="password"
+          placeholder="Hasło"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+        {nameError && <p className="text-red-500">Imię jest niepoprawne!</p>}
+        {emailError && (
+          <p className="text-red-500">Adres e-mail jest niepoprawny!</p>
+        )}
+        {passwordError && (
+          <p className="text-red-500">Hasło musi mieć co najmniej 6 znaków!</p>
+        )}
+        {registerSuccess && (
+          <p className="text-green-500">
+            Rejestracja pomyślna! Możesz się teraz zalogować.
+          </p>
+        )}
 
-      <button
-        onClick={handleRegister}
-        disabled={isRegistering}
-        className="p-[3px] relative"
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
-        <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-          {isRegistering ? "Rejestrowanie..." : "Zarejestruj się"}
-        </div>
-      </button>
+        <button
+          onClick={handleRegister}
+          disabled={isRegistering}
+          className="p-[3px] relative"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+          <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+            {isRegistering ? "Rejestrowanie..." : "Zarejestruj się"}
+          </div>
+        </button>
 
-      <p>
-        Masz już konto? <Link href="/login">Zaloguj się</Link>.
-      </p>
+        <p className="text-center text-pink-700">
+          Masz już konto?{" "}
+          <Link
+            href="/login"
+            className="text-pink-500 hover:text-pink-600 font-medium"
+          >
+            Zaloguj się
+          </Link>
+          .
+        </p>
+      </div>
     </div>
   );
 }
