@@ -12,13 +12,6 @@ export default function LoginPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      router.push("/");
-    }
-  }, [router]);
-
   function handleLogin() {
     setIsLoggingIn(true);
     fetch("https://api.escuelajs.co/api/v1/auth/login", {

@@ -7,14 +7,24 @@ export default function KoszykPage() {
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderMessage, setOrderMessage] = useState("");
   const [user, setUser] = useState(null);
+  const [address, setAddress] = useState({
+    street: "",
+    city: "",
+    postalCode: "",
+    country: "",
+  });
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+  });
 
   useEffect(() => {
-    // Get cart and user data from sessionStorage at once
     const savedCart = sessionStorage.getItem("cart");
     const savedUser = sessionStorage.getItem("token");
 
-    console.log("Retrieved cart from sessionStorage:", savedCart); // Debugging line
-    console.log("Saved user in sessionStorage:", savedUser); // Debugging line
+    console.log("Retrieved cart from sessionStorage:", savedCart);
+    console.log("Saved user in sessionStorage:", savedUser);
 
     if (savedCart) {
       setCart(JSON.parse(savedCart));
@@ -45,21 +55,35 @@ export default function KoszykPage() {
       setOrderMessage("Musisz być zalogowany, aby złożyć zamówienie.");
       return;
     }
+
+    if (
+      !address.street ||
+      !address.city ||
+      !address.postalCode ||
+      !address.country
+    ) {
+      setOrderMessage("Proszę wypełnić dane adresowe.");
+      return;
+    }
+
+    if (
+      !paymentInfo.cardNumber ||
+      !paymentInfo.expiryDate ||
+      !paymentInfo.cvv
+    ) {
+      setOrderMessage("Proszę wypełnić dane płatności.");
+      return;
+    }
+
     setIsOrdering(true);
     setOrderMessage("");
 
     try {
-      const response = await fetch("https://api.escuelajs.co/api/v1/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: cart,
-          totalPrice,
-          user: user,
-        }),
-      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = {
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      };
 
       if (!response.ok) {
         throw new Error("Błąd podczas składania zamówienia.");
@@ -80,6 +104,7 @@ export default function KoszykPage() {
       <h2 className="text-2xl font-bold mb-6 text-pink-800">
         Koszyk ({cart.length} przedmiotów)
       </h2>
+
       <div className="space-y-4">
         {cart.map((item, index) => (
           <div
@@ -97,9 +122,90 @@ export default function KoszykPage() {
           </div>
         ))}
       </div>
+
+      <div className="mt-6 space-y-4">
+        <div className="bg-white p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-pink-800 mb-3">
+            Dane adresowe
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="Ulica"
+              value={address.street}
+              onChange={(e) =>
+                setAddress({ ...address, street: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Miasto"
+              value={address.city}
+              onChange={(e) => setAddress({ ...address, city: e.target.value })}
+              className="border p-2 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Kod pocztowy"
+              value={address.postalCode}
+              onChange={(e) =>
+                setAddress({ ...address, postalCode: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Kraj"
+              value={address.country}
+              onChange={(e) =>
+                setAddress({ ...address, country: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg">
+          <h3 className="text-lg font-bold text-pink-800 mb-3">
+            Dane płatności
+          </h3>
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              placeholder="Numer karty"
+              value={paymentInfo.cardNumber}
+              onChange={(e) =>
+                setPaymentInfo({ ...paymentInfo, cardNumber: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+            <input
+              type="text"
+              placeholder="Data ważności"
+              value={paymentInfo.expiryDate}
+              onChange={(e) =>
+                setPaymentInfo({ ...paymentInfo, expiryDate: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+            <input
+              type="text"
+              placeholder="CVV"
+              value={paymentInfo.cvv}
+              onChange={(e) =>
+                setPaymentInfo({ ...paymentInfo, cvv: e.target.value })
+              }
+              className="border p-2 rounded"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="mt-6 pt-4 border-t border-pink-200">
         <h3 className="text-xl font-bold text-pink-800">Suma: ${totalPrice}</h3>
       </div>
+
       <button
         onClick={placeOrder}
         disabled={isOrdering}
@@ -109,6 +215,7 @@ export default function KoszykPage() {
       >
         {isOrdering ? "Przetwarzanie..." : "Złóż zamówienie"}
       </button>
+
       {orderMessage && (
         <p className="mt-4 text-pink-700 font-medium">{orderMessage}</p>
       )}
