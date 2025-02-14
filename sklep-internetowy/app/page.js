@@ -34,7 +34,6 @@ export default function Home() {
 
     checkAuth();
 
-    // Listen for custom auth event
     const handleAuthChange = () => checkAuth();
     window.addEventListener("authChange", handleAuthChange);
 

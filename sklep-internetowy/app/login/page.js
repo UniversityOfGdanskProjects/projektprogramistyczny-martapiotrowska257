@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import styles from "./login.module.css";
 import headers from "@/app/headers";
 import { useRouter } from "next/navigation";
 
