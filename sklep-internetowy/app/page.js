@@ -18,16 +18,17 @@ export default function Home() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       if (!token) {
         router.push("/login");
+        setIsAuthenticated(false);
         return;
       }
 
       setIsAuthenticated(true);
       if (window.location.pathname === "/login") {
-        router.push("/"); // Redirect after login
+        router.push("/");
       }
     };
 
@@ -46,6 +47,13 @@ export default function Home() {
     if (!isAuthenticated) return;
 
     async function fetchList() {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        setErrorMessage("User not logged in");
+        setIsLoading(false);
+        return;
+      }
+      console.log("User authenticated, token:", token);
       try {
         const limit = searchParams.get("limit") || "150";
         const search = searchParams.get("search") || "";
@@ -96,8 +104,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    console.log("Loading cart from localStorage:", savedCart);
+    const savedCart = sessionStorage.getItem("cart");
+    console.log("Loading cart from sessionStorage:", savedCart);
 
     if (savedCart) {
       try {
@@ -105,7 +113,7 @@ export default function Home() {
         console.log("Parsed cart:", parsedCart);
         setCart(parsedCart);
       } catch (error) {
-        console.error("Error parsing cart from localStorage:", error);
+        console.error("Error parsing cart from sessionStorage:", error);
       }
     }
   }, []);
@@ -120,7 +128,7 @@ export default function Home() {
 
       console.log("Updated cart:", updatedCart);
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
 
       return updatedCart;
     });
