@@ -6,6 +6,7 @@ import Link from "next/link";
 // import "@/app/globals.css";
 import styles from "@/app/home.module.css";
 import Filter from "./components/Filter";
+import KoszykPage from "./koszyk/page";
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     async function fetchList() {
@@ -65,6 +67,37 @@ export default function Home() {
     router.push(`/?${params.toString()}`);
   };
 
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    console.log("Loading cart from localStorage:", savedCart);
+
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        console.log("Parsed cart:", parsedCart);
+        setCart(parsedCart);
+      } catch (error) {
+        console.error("Error parsing cart from localStorage:", error);
+      }
+    }
+  }, []);
+
+  const addToCart = (product) => {
+    console.log("Adding product to cart:", product);
+
+    setCart((prevCart) => {
+      console.log("Previous cart state:", prevCart);
+
+      const updatedCart = [...prevCart, { ...product }];
+
+      console.log("Updated cart:", updatedCart);
+
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+      return updatedCart;
+    });
+  };
+
   return (
     <div className={styles.productsBox}>
       <h1>Lista Produktów</h1>
@@ -87,6 +120,12 @@ export default function Home() {
                   <h2>{product.title}</h2>
                   <p className={styles.price}>Cena: ${product.price}</p>
                 </Link>
+                <button
+                  className={styles.addToCartButton}
+                  onClick={() => addToCart(product)}
+                >
+                  Dodaj do koszyka
+                </button>
               </div>
             ))}
           </div>

@@ -58,3 +58,20 @@
 .productCard a:hover {
   text-decoration: underline;
 }
+
+.addToCartButton {
+  background-color: #ec4899;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.addToCartButton:hover {
+  background-color: #fdf2f8;
+  color: #9d174d;
+  border: 1px solid #ec4899;
+}
