@@ -6,23 +6,24 @@ export default function KoszykPage() {
   const [cart, setCart] = useState([]);
   const [isOrdering, setIsOrdering] = useState(false);
   const [orderMessage, setOrderMessage] = useState("");
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Get cart and user data from sessionStorage at once
     const savedCart = sessionStorage.getItem("cart");
+    const savedUser = sessionStorage.getItem("token");
+
     console.log("Retrieved cart from sessionStorage:", savedCart); // Debugging line
+    console.log("Saved user in sessionStorage:", savedUser); // Debugging line
 
     if (savedCart) {
       setCart(JSON.parse(savedCart));
     }
 
-    const savedUser = sessionStorage.getItem("user");
-    console.log("Retrieved user from sessionStorage:", savedUser); // Debugging line
-
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      setUser(savedUser);
     } else {
-      setUser("");
+      console.log("No user found in sessionStorage.");
     }
   }, []);
 
@@ -56,7 +57,7 @@ export default function KoszykPage() {
         body: JSON.stringify({
           items: cart,
           totalPrice,
-          user: user.id, // Now user is defined
+          user: user,
         }),
       });
 

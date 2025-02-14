@@ -32,9 +32,11 @@ export default function LoginPage() {
       .then((res) => res.json())
       .then((tokens) => {
         if (tokens.access_token) {
+          console.log("User data:", tokens.user); // Debugging line
           sessionStorage.setItem("token", tokens.access_token);
           sessionStorage.setItem("user", JSON.stringify(tokens.user)); // Storing user info correctly
           window.dispatchEvent(new Event("storage")); // Trigger storage event
+
           router.push("/");
         } else {
           alert("Błąd logowania. Sprawdź dane i spróbuj ponownie.");
