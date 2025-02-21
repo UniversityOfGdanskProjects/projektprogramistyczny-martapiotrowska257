@@ -24,10 +24,10 @@ export default function LoginPage() {
       .then((res) => res.json())
       .then((tokens) => {
         if (tokens.access_token) {
-          console.log("User data:", tokens.user); // Debugging line
+          console.log("User data:", tokens.user);
           sessionStorage.setItem("token", tokens.access_token);
-          sessionStorage.setItem("user", JSON.stringify(tokens.user)); // Storing user info correctly
-          window.dispatchEvent(new Event("storage")); // Trigger storage event
+          sessionStorage.setItem("user", JSON.stringify(tokens.user));
+          window.dispatchEvent(new Event("storage"));
 
           router.push("/");
         } else {
@@ -48,7 +48,6 @@ export default function LoginPage() {
       <div className="space-y-4">
         <input
           type="email"
-          placeholder="Adres e-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3 border border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"

@@ -154,9 +154,10 @@ export default function Home() {
               <div key={product.id} className={styles.productCard}>
                 <Link href={`/${product.id}`}>
                   <img
-                    src={product.images.map((image) =>
-                      JSON.parse(image.replace(/\\\"/g, '"'))
-                    )}
+                    // src={product.images.map((image) =>
+                    //   image.replace(/\\\"/g, '"')
+                    // )}
+                    src={product.images[0]}
                     alt={product.title}
                     className={styles.productImage}
                   />

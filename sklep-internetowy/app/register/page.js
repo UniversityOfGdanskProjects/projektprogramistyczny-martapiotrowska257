@@ -10,12 +10,13 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
-  function handleRegister() {
+  async function handleRegister() {
     if (name.length === 0) {
       setNameError(true);
       return;
@@ -23,6 +24,22 @@ export default function RegisterPage() {
 
     if (email.length === 0 || !email.includes("@")) {
       setEmailError(true);
+      return;
+    }
+
+    const availabilityResponse = await fetch(
+      "https://api.escuelajs.co/api/v1/users/is-available",
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    const availability = await availabilityResponse.json();
+
+    if (!availability.isAvailable) {
+      setEmailExists(true);
       return;
     }
 
@@ -55,6 +72,7 @@ export default function RegisterPage() {
   useEffect(() => {
     setNameError(false);
     setEmailError(email.length > 0 && !email.includes("@"));
+    setEmailExists(false);
     setPasswordError(password.length > 0 && password.length < 6);
   }, [name, email, password]);
 
@@ -86,6 +104,9 @@ export default function RegisterPage() {
         {nameError && <p className="text-red-500">Imię jest niepoprawne!</p>}
         {emailError && (
           <p className="text-red-500">Adres e-mail jest niepoprawny!</p>
+        )}
+        {emailExists && (
+          <p className="text-red-500">Adres e-mail jest już zajęty!</p>
         )}
         {passwordError && (
           <p className="text-red-500">Hasło musi mieć co najmniej 6 znaków!</p>
