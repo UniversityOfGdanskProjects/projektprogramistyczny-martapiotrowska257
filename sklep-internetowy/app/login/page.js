@@ -22,12 +22,23 @@ export default function LoginPage() {
       headers,
     })
       .then((res) => res.json())
-      .then((tokens) => {
+
+      .then(async (tokens) => {
+        await fetch("https://api.escuelajs.co/api/v1/auth/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.email) {
+              localStorage.setItem("user", data.email);
+            }
+          });
+
         if (tokens.access_token) {
-          console.log("User data:", tokens.user);
-          sessionStorage.setItem("token", tokens.access_token);
-          sessionStorage.setItem("user", JSON.stringify(tokens.user));
-          window.dispatchEvent(new Event("storage"));
+          localStorage.setItem("token", tokens.access_token);
 
           router.push("/");
         } else {

@@ -18,17 +18,22 @@ export default function Home() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = sessionStorage.getItem("token");
+      try {
+        const token = localStorage.getItem("token");
 
-      if (!token) {
-        router.push("/login");
+        if (!token) {
+          setIsAuthenticated(false);
+          router.push("/login");
+          return;
+        }
+
+        setIsAuthenticated(true);
+        if (window.location.pathname === "/login") {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
         setIsAuthenticated(false);
-        return;
-      }
-
-      setIsAuthenticated(true);
-      if (window.location.pathname === "/login") {
-        router.push("/");
       }
     };
 
@@ -46,7 +51,7 @@ export default function Home() {
     if (!isAuthenticated) return;
 
     async function fetchList() {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       if (!token) {
         setErrorMessage("User not logged in");
         setIsLoading(false);
@@ -111,8 +116,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const savedCart = sessionStorage.getItem("cart");
-    console.log("Loading cart from sessionStorage:", savedCart);
+    const savedCart = localStorage.getItem("cart");
+    console.log("Loading cart from localStorage:", savedCart);
 
     if (savedCart) {
       try {
@@ -120,7 +125,7 @@ export default function Home() {
         console.log("Parsed cart:", parsedCart);
         setCart(parsedCart);
       } catch (error) {
-        console.error("Error parsing cart from sessionStorage:", error);
+        console.error("Error parsing cart from localStorage:", error);
       }
     }
   }, []);
@@ -135,7 +140,7 @@ export default function Home() {
 
       console.log("Updated cart:", updatedCart);
 
-      sessionStorage.setItem("cart", JSON.stringify(updatedCart));
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
 
       return updatedCart;
     });
