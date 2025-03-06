@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const router = useRouter();
 
@@ -22,23 +23,28 @@ export default function LoginPage() {
       headers,
     })
       .then((res) => res.json())
-
       .then(async (tokens) => {
-        await fetch("https://api.escuelajs.co/api/v1/auth/profile", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${tokens.access_token}`,
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.email) {
-              localStorage.setItem("user", data.email);
-            }
-          });
-
         if (tokens.access_token) {
           localStorage.setItem("token", tokens.access_token);
+
+          const profile = await fetch(
+            "https://api.escuelajs.co/api/v1/auth/profile",
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${tokens.access_token}`,
+              },
+            }
+          ).then((res) => res.json());
+
+          if (profile.email) {
+            localStorage.setItem("user", profile.email);
+
+            const role = profile.email.toLowerCase().includes("admin")
+              ? "admin"
+              : "customer";
+            localStorage.setItem("role", role);
+          }
 
           router.push("/");
         } else {

@@ -51,12 +51,23 @@ export default function RegisterPage() {
     setIsRegistering(true);
     setRegisterSuccess(false);
 
+    const determineRole = (name, email) => {
+      if (
+        name.toLowerCase().includes("admin") &&
+        email.toLowerCase().includes("admin")
+      ) {
+        return "admin";
+      }
+      return "customer";
+    };
+
     fetch("https://api.escuelajs.co/api/v1/users/", {
       method: "POST",
       body: JSON.stringify({
         name,
         email,
         password,
+        role: determineRole(name, email),
         avatar: "https://picsum.photos/800",
       }),
       headers,
