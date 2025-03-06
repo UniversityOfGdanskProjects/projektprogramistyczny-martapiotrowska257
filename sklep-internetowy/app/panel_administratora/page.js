@@ -55,24 +55,47 @@ export default function AdminPanel() {
     fetchData();
   }, []);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewProduct((prev) => ({
+      ...prev,
+      [name]: value,
+      images: ["https://placeimg.com/640/480/any"],
+    }));
+  };
+
   const handleAddProduct = async () => {
     try {
-      const response = await fetch("https://api.escuelajs.co/api/v1/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
-      });
+      const response = await fetch(
+        "https://api.escuelajs.co/api/v1/products/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newProduct),
+        }
+      );
       const data = await response.json();
       setProducts([...products, data]);
       setNewProduct({
         title: "",
         price: "",
-        category: "",
         description: "",
+        categoryId: "",
         images: [],
       });
     } catch (error) {
       console.error("Error adding product:", error);
+    }
+  };
+
+  const handleDeleteProduct = async (productId) => {
+    try {
+      await fetch(`https://api.escuelajs.co/api/v1/products/${productId}`, {
+        method: "DELETE",
+      });
+      setProducts(products.filter((product) => product.id !== productId));
+    } catch (error) {
+      console.error("Error deleting product:", error);
     }
   };
 
@@ -91,9 +114,61 @@ export default function AdminPanel() {
       <h1 className="text-3xl font-bold mb-6 text-pink-800">
         Panel Administratora
       </h1>
-      <p className="text-pink-700 text-xl font-bold mb-2">
-        Witaj w panelu administracyjnym!
-      </p>
+
+      {/* Product Management Section */}
+      <div className="bg-white p-4 rounded-lg border border-pink-200 mb-6">
+        <h2 className="text-pink-700 text-xl font-bold mb-2">
+          Dodaj nowy produkt
+        </h2>
+        <div className="space-y-3">
+          <input
+            name="title"
+            value={newProduct.title}
+            onChange={handleInputChange}
+            placeholder="Nazwa produktu"
+            className="w-full p-2 border border-pink-200 rounded-lg"
+          />
+          <input
+            name="price"
+            value={newProduct.price}
+            onChange={handleInputChange}
+            placeholder="Cena"
+            className="w-full p-2 border border-pink-200 rounded-lg"
+          />
+          <button
+            onClick={handleAddProduct}
+            className="bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700"
+          >
+            Dodaj produkt
+          </button>
+        </div>
+      </div>
+
+      {/* Products List Section */}
+      <div className="bg-white p-4 rounded-lg border border-pink-200 mb-6">
+        <h2 className="text-pink-700 text-xl font-bold mb-2">
+          Lista produktów:
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="p-4 border border-pink-100 rounded-lg"
+            >
+              <h3 className="font-bold">{product.title}</h3>
+              <p>Cena: {product.price} zł</p>
+              <button
+                onClick={() => handleDeleteProduct(product.id)}
+                className="mt-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
+              >
+                Usuń
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* User Management Section */}
       <div className="bg-white p-4 rounded-lg border border-pink-200">
         <input
           type="text"
