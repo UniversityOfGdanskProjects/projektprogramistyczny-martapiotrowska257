@@ -22,11 +22,11 @@ export default function KoszykPage() {
   const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
-    const savedCart = sessionStorage.getItem("cart");
-    const savedUser = sessionStorage.getItem("token");
+    const savedCart = localStorage.getItem("cart");
+    const savedUser = localStorage.getItem("token");
 
-    console.log("Retrieved cart from sessionStorage:", savedCart);
-    console.log("Saved user in sessionStorage:", savedUser);
+    console.log("Retrieved cart from localStorage:", savedCart);
+    console.log("Saved user in localStorage:", savedUser);
 
     if (savedCart) {
       setCart(JSON.parse(savedCart));
@@ -35,14 +35,14 @@ export default function KoszykPage() {
     if (savedUser) {
       setUser(savedUser);
     } else {
-      console.log("No user found in sessionStorage.");
+      console.log("No user found in localStorage.");
     }
   }, []);
 
   const removeFromCart = (index) => {
     const newCart = cart.filter((_, i) => i !== index);
     setCart(newCart);
-    sessionStorage.setItem("cart", JSON.stringify(newCart));
+    localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
   const validCoupons = {
@@ -108,7 +108,7 @@ export default function KoszykPage() {
 
       setOrderMessage("Zamówienie zostało złożone!");
       setCart([]);
-      sessionStorage.removeItem("cart");
+      localStorage.removeItem("cart");
     } catch (error) {
       setOrderMessage(error.message);
     } finally {

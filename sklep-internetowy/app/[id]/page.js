@@ -39,9 +39,10 @@ export default function ProductPage() {
   return (
     <div className={styles.productContainer}>
       <img
-        src={product.images.map((image) =>
-          JSON.parse(image.replace(/\\\"/g, '"'))
-        )}
+        // src={product.images.map((image) =>
+        //   JSON.parse(image.replace(/\\\"/g, '"'))
+        // )}
+        src={product.images[0]}
         alt={product.title}
         className={styles.productImage}
       />
