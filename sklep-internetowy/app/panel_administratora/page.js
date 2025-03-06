@@ -19,9 +19,9 @@ export default function AdminPanel() {
   const [newProduct, setNewProduct] = useState({
     title: "",
     price: "",
-    category: "",
     description: "",
-    images: [],
+    categoryId: "",
+    images: ["https://placeimg.com/640/480/any"],
   });
 
   useEffect(() => {
@@ -40,13 +40,6 @@ export default function AdminPanel() {
         );
         const productData = await productResponse.json();
         setProducts(productData);
-
-        // Fetch cart data for each user
-        userData.forEach(async (user) => {
-          const cartResponse = await fetch(`/api/cart/${user.id}`);
-          const cartData = await cartResponse.json();
-          setOrders((prev) => ({ ...prev, [user.id]: cartData }));
-        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -133,8 +126,25 @@ export default function AdminPanel() {
             value={newProduct.price}
             onChange={handleInputChange}
             placeholder="Cena"
+            type="number"
             className="w-full p-2 border border-pink-200 rounded-lg"
           />
+          <input
+            name="categoryId"
+            value={newProduct.categoryId}
+            onChange={handleInputChange}
+            placeholder="ID Kategorii (np. 1)"
+            type="number"
+            className="w-full p-2 border border-pink-200 rounded-lg"
+          />
+          <textarea
+            name="description"
+            value={newProduct.description}
+            onChange={handleInputChange}
+            placeholder="Opis produktu"
+            className="w-full p-2 border border-pink-200 rounded-lg"
+            rows="3"
+          ></textarea>
           <button
             onClick={handleAddProduct}
             className="bg-pink-600 text-white py-2 px-4 rounded hover:bg-pink-700"
